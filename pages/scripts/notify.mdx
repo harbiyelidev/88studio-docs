@@ -1,0 +1,120 @@
+import { Tabs, Callout, Cards } from 'nextra/components'
+
+# Installation Guide
+
+<Cards>
+    <Cards.Card
+        title="88Studio Tebex"
+        href="https://shop.88studio.store/"
+        arrow
+    />
+    <Cards.Card
+        title="88Studio Notify"
+        href="https://shop.88studio.store/package/6480938"
+        arrow
+    />
+    <Cards.Card
+        title="Support Discord"
+        href="https://discord.gg/88studio"
+        arrow
+    />
+</Cards>
+
+<Callout type='info'>
+    If you follow this guide completely, you will install the **88studio-notify** script without any problems.
+</Callout>
+
+<Tabs items={['qb', 'qbox', 'esx']}>
+  <Tabs.Tab>
+    ```lua filename="qb-core/client/functions.lua" copy showLineNumbers
+    function QBCore.Functions.Notify(text, texttype, length)
+        if type(text) == "table" then
+            local ttext = text.text or 'Placeholder'
+            local caption = text.caption or 'Placeholder'
+            texttype = texttype or 'primary'
+            length = length or 5000
+            exports['88studio-notify']:SendNotify(caption, ttext, length, texttype)
+        else
+            texttype = texttype or 'primary'
+            length = length or 5000
+            caption = 'INFO'
+
+            if texttype == 'error' then
+                caption = 'ERROR'
+            elseif texttype == 'success' then
+                caption = 'SUCCESS'
+            elseif texttype == 'warning' then
+                caption = 'WARNING'
+            end
+            exports['88studio-notify']:SendNotify(caption, text, length, texttype)
+        end
+    end
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+  ```lua filename="qbx_core/client/functions.lua" copy showLineNumbers
+    ---Text box popup for player which dissappears after a set time.
+    ---@param text table|string text of the notification
+    ---@param data NotifyProps
+    ---@diagnostic disable-next-line: duplicate-set-field
+    function lib.notify(data)
+        local sound = settings.notification_audio and data.sound
+        data.sound = nil 
+        local title = data.title or nil
+        local description = data.description or ""
+        local length = data.length or 5000 
+        local notifType = data.type or 'info'
+
+        if notifType == 'info' then
+            notifType = 'primary'
+        end
+
+        if title == nil then
+            if notifType == 'primary' then
+                title = 'INFO'
+            elseif notifType == 'error' then
+                title = 'ERROR'
+            elseif notifType == 'success' then
+                title = 'SUCCESS'
+            elseif notifType == 'warning' then
+                title = 'WARNING'
+            end
+        end
+
+        exports['88studio-notify']:SendNotify(title, description, length, notifType)
+
+        if not sound then return end
+
+        if sound.bank then lib.requestAudioBank(sound.bank) end
+
+        local soundId = GetSoundId()
+        PlaySoundFrontend(soundId, sound.name, sound.set, true)
+        ReleaseSoundId(soundId)
+
+        if sound.bank then ReleaseNamedScriptAudioBank(sound.bank) end
+    end
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```lua filename="es_extedned/client/functions.lua" copy showLineNumbers
+    function ESX.ShowNotification(message, type, length)
+        local caption = nil
+
+        if type == 'info' then
+            type = 'primary'
+            caption = 'INFO'
+        end
+
+        if type == 'error' then
+            caption = 'ERROR'
+        elseif type == 'success' then
+            caption = 'SUCCESS'
+        elseif type == 'warning' then
+            caption = 'WARNING'
+        end
+
+        exports['88studio-notify']:SendNotify(caption, message, length, type)
+    end
+    ```
+  </Tabs.Tab>
+</Tabs>
