@@ -99,8 +99,9 @@ import { Tabs, Callout, Cards } from 'nextra/components'
     ```lua filename="es_extedned/client/functions.lua" copy showLineNumbers
     function ESX.ShowNotification(message, type, length)
         local caption = nil
+        local type = type or 'info'
 
-        if type == 'info' then
+        if type == 'info' or type == 'inform' then
             type = 'primary'
             caption = 'INFO'
         end

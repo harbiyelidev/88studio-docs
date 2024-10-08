@@ -1,0 +1,119 @@
+import { Callout, Cards, Steps } from 'nextra/components'
+
+# Installation Guide
+
+<Cards>
+    <Cards.Card
+        title="88Studio Tebex"
+        href="https://shop.88studio.store/"
+        arrow
+    />
+    <Cards.Card
+        title="88Studio Dailyrewards"
+        href="https://shop.88studio.store/"
+        arrow
+    />
+    <Cards.Card
+        title="Support Discord"
+        href="https://discord.gg/88studio"
+        arrow
+    />
+</Cards>
+
+<Callout type='info'>
+    If you follow this guide completely, you will install the **88studio-dailyrewards** script without any problems.
+</Callout>
+
+
+<Steps>
+    ### Choose Language
+
+    First of all you need to select the language you want to use, by default English is selected and the other language you can use is Turkish!
+    
+    Contact us for other language translation files.
+
+    ```lua filename="88studio-dailyrewards/config/config.lua" copy showLineNumbers
+    Config.Locale = 'en'
+    ```
+
+    Specify how many days in days, months and years you want to reach 30 days
+
+    ### Set the Rewards End Time
+
+    ```lua filename="88studio-dailyrewards/config/config.lua" copy showLineNumbers
+    Config.EndDate = { day = 7, month = 11, year = 2024 }
+    ```
+
+    ### Set the Item Image
+
+    Pulling item images to be shown in UI from inventory is set to qb-inventory by default. Specify the path to item images in your own inventory.
+
+    ```lua filename="88studio-dailyrewards/config/config.lua" copy showLineNumbers
+    Config.ItemImage = Config.Inventory() ..'/html/images'
+    ```
+
+    ### Money Settings
+
+    If your cash is in the form of an item, check **moneyItem** as true and enter the item name of the cash in **itemName**
+
+    ```lua filename="88studio-dailyrewards/config/config.lua" copy showLineNumbers
+    Config.MoneySettings = {
+        moneyItem = false,
+        itemName = 'cash',
+    }
+    ```
+
+    ### Default Garage
+
+    If you want to give a vehicle as a reward, you can specify the garage where the vehicle will be delivered.
+
+    ```lua filename="88studio-dailyrewards/config/config.lua" copy showLineNumbers
+    Config.DefaultGarage = "motelgarage"
+    ```
+
+    ### Tebext Store Link
+
+    Enter the url of the tebex store where players can buy premium.
+
+    ```lua filename="88studio-dailyrewards/config/config.lua" copy showLineNumbers
+    Config.TebexLink = 'https://88studio.tebex.io/'
+    ```
+
+    ### Set the Rewards
+
+    You can set the rewards to be given to the players on the 30th day.
+    For 30 days, customize gifts for each day to your liking
+
+    ```lua filename="88studio-dailyrewards/config/config.lua" copy showLineNumbers
+    ---@param type? "item" | "money" | "vehicle"
+    ---@param item? string
+    ---@param itemDisplayName? string
+    ---@param rewardAmount? number
+    Config.Rewards = {
+        basic = {
+            ['1'] = { id = 1, type = type, item = item, name = itemDisplayName, amount = rewardAmount },
+            .
+            .
+            .
+            ['30'] = { id = 30, type = type, item = item, name = itemDisplayName, amount = rewardAmount }
+        },
+        premium = {
+            ['1'] = { id = 1, type = type, item = item, name = itemDisplayName, amount = rewardAmount },
+            .
+            .
+            .
+            ['30'] = { id = 30, type = type, item = item, name = itemDisplayName, amount = rewardAmount }
+        },
+    }
+    ```
+
+    ### Set the Tebex Store
+    Paste the tebex secret id into the **SecretId** field to check the Transaction ID, and enter the id of the package you want the premium features to be activated when players buy a package in the **PremiumPackageId** field.
+
+    ```lua filename="88studio-dailyrewards/server/tebex.lua" copy showLineNumbers
+    local tebexConfig = {
+        SecretId = 'secret_id',
+        PremiumPackageId = 1111111,
+    }
+    ```
+</Steps>
